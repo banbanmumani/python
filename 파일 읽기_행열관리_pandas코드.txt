@@ -1,0 +1,75 @@
+import pandas as pd
+df=pd.read_csv("https://raw.githubusercontent.com/pjm9889/python/master/time_series.csv", encoding="euc_kr") # encoding='UTF8'
+print(df)
+df.info()  #자료의 정보를 확인함.
+df.head(10)
+
+df.columns
+df.columns.values[0]="Jigu"  #첫번째열이름 변경  df.rename(columns={df.columns[0]:"jugu"}, inplace = True)
+df.columns
+
+df.rename(columns={"항목":"item"},inplace=True)  #False이면 아무변화 없음
+df.columns
+
+df.columns[:3]   #3개전까지의 열이름 0,1,2개 보여주기
+
+# 열이름에 문자열 추가하기 연습
+tmp=df.columns[5]
+print(tmp)
+tmp="Y_"+tmp
+print(tmp)
+
+# http://doorbw.tistory.com/54
+#열이름 규칙적 반복일때 한번에 바꾸기
+# https://wikidocs.net/22  (for 문법사용)
+
+i=3
+tmp=[0]*len(df.columns)
+for i in range(len(df.columns)):
+    if i<=2:
+        tmp[i]=df.columns[i]
+    else:
+       # tmp[i]="Y_"+df.columns[i].replace("월","")
+        tmp[i]="Y_"+df.columns[i].replace("월","").replace(".","_").replace(" ","")
+        df.columns.values[i]=tmp[i]
+        print(df.columns[i])
+        
+
+df.columns.values[2]="dan"
+df.columns
+
+## Null 값 0값으로 모두 채우기
+df["dan"]
+df["dan"]=0
+df.head(10)
+
+
+## --- http://jsideas.net/python/2015/08/10/histogram_tutorial.html  
+## http://nittaku.tistory.com/111
+
+# 데이터 추출   == 같다, & 모든조건 만족, | 여러조건중 한개만만족
+
+df_seoul=df[(df.Jigu=="서울특별시") & (df.item=="백화점 경상지수")]
+df_seoul
+
+
+## csv로 저장하기
+df.to_csv("c:/py_data/time_result.csv",mode="w", header=True)
+
+
+### 서울만 행열 변환한뒤 다시 저장하기
+df_seoul
+seoul_r=np.transpose(df_seoul)   #행열변환
+len(seoul_r)
+seoul_result=seoul_r[3:]
+seoul_result
+seoul_result.columns = ['val']
+seoul_result
+seoul_result.to_csv("c:/py_data/time_result_seoul.csv",mode="w", header=True, index=True)
+
+
+
+
+# http://sacko.tistory.com/18
+
+# http://yujuwon.tistory.com/entry/Pandas-%ED%95%A8%EC%88%98%EB%93%A4
